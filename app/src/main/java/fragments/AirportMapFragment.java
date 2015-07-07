@@ -1,6 +1,7 @@
 package fragments;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +26,15 @@ public class AirportMapFragment extends Fragment {
         createMap();
 
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        Fragment fragment = (getFragmentManager().findFragmentById(R.id.mapView));
+        FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+        ft.remove(fragment);
+        ft.commit();
+        super.onPause();
     }
 
     private void createMap(){
