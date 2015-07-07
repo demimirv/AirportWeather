@@ -1,12 +1,16 @@
 package com.example.mschroeder.airportweather;
 
+import android.app.FragmentTransaction;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import fragments.AirportListFragment;
+import fragments.AirportMapFragment;
 
 
 public class WeatherActivity extends ActionBarActivity {
@@ -21,7 +25,7 @@ public class WeatherActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.airport_list);
+        setContentView(R.layout.airport_layout);
 
         String version = "";
         try {
@@ -32,6 +36,7 @@ public class WeatherActivity extends ActionBarActivity {
             Log.e(TAG, ex.toString());
         }
         setTitle(getString(R.string.app_name) + " " + version);
+        gotoListFragment();
     }
 
     @Override
@@ -51,13 +56,11 @@ public class WeatherActivity extends ActionBarActivity {
         if (id == R.id.airport_toggle) {
             if (appState == APP_LIST){
                 // Switch view to map
-                showMapView();
-                appState = APP_MAP;
+                gotoMapFragment();
             }
             else {
                 // Switch view to list
-                showListView();
-                appState = APP_LIST;
+                gotoListFragment();
             }
             updateActionIcon();
             return true;
@@ -77,11 +80,21 @@ public class WeatherActivity extends ActionBarActivity {
         }
     }
 
-    private void showListView(){
-        // TODO: set up the list view pane
+    private void gotoListFragment(){
+        appState = APP_LIST;
+        // Set up the list view pane
+        AirportListFragment frag = new AirportListFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.contentLayout, frag, "ListFragment");
+        ft.commit();
     }
 
-    private void showMapView(){
-        // TODO: set up the map view pane
+    private void gotoMapFragment(){
+        appState = APP_MAP;
+        // Set up the map view pane
+        AirportMapFragment frag = new AirportMapFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.contentLayout, frag, "MapFragment");
+        ft.commit();
     }
 }
